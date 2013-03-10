@@ -78,7 +78,6 @@ var centerWindow = slate.operation("move", {
 
 var centerExternally  = function (win) {
     win.doOperation(slate.operation("show", {"app": win.app().name()}));
-    show(win.app().name())
     win.doOperation(putOnExternal);
     win.doOperation(centerWindow);
 };
@@ -108,6 +107,10 @@ var bottomRightExternal = function (win) {
     win.doOperation(moveBottomRight);
 };
 
+var focusBelow = function (win) {
+    win.doOperation(slate.operation("focus", { "direction": "below" }));
+};
+
 // Layouts
 var home_layout = slate.layout("Home-External",
                                { "Mail": { "title-order": ["Activity"],
@@ -132,16 +135,16 @@ var laptop_only = slate.layout("Laptop-Only",
                                  "SourceTree": { "operations": [hide("SourceTree")]},
                                  "Calendar": { "operations": [hide("Calendar")]},
                                  "Google Chrome": { "title-order-regex": ["Developer Tools.*"],
-                                                    "operations": [halfRightExternal, fullscreen, halfLeftExternal]},
+                                                    "operations": [focusBelow, fullscreen, fullscreen]},
                                  "iTerm": {"operations": [pushTop]},
-                                 "Tomahawk": { "operations": [centerExternally] },
+                                 "Tomahawk": { "operations": [centerWindow] },
                                  "Safari": { "operations": [fullscreen] },
                                  "WebKit": { "title-order-regex": ["Web Inspector.*"],
                                              "operations": [halfRightExternal, halfLeftExternal] },
                                  "Sublime Text 2": { "title-order-regex": [".*humbug-split", ".*humbug"],
                                                      "operations": [fullscreenExternally, fullscreen] },
                                  "Quassel IRC Client": { "operations": [fullscreen] },
-                                 "Twitter": { "operations": [halfRightExternal] }
+                                 "Twitter": { "operations": [pushRight] }
                                });
 
 

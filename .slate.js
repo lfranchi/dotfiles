@@ -8,7 +8,10 @@ var externalScreen = function() {
     if (home_24inch.rect()) {
         return home_24inch;
     }
-//    var work_27inch = slate.screenForRef("");
+    var work_27inch = slate.screenForRef("2560x1440");
+    if (work_27inch.rect()) {
+        return work_27inch;
+    }
 
     // If no external screen, return the only one
     return slate.screenForRef("0");
@@ -65,6 +68,9 @@ var showhide = function (show_hide) {
         }
     }
 };
+
+
+
 var show = showhide("show");
 var hide = showhide("hide");
 
@@ -150,7 +156,7 @@ var laptop_only = slate.layout("Laptop-Only",
 
 // Apply home layout on pressing control-h
 slate.bind("h:ctrl", slate.operation("layout", { "name" : home_layout }));
-slate.bind("g:ctrl", slate.operation("layout", {"name" : laptop_only }));
+//slate.bind("g:ctrl", slate.operation("layout", {"name" : laptop_only }));
 
 slate.default(["1920x1080","1680x1050"], home_layout);
 slate.default(["1680x1050"], laptop_only);
@@ -168,8 +174,7 @@ slate.bind("4:alt", function (win) {
     win.doOperation(pushTop);
 });
 slate.bind("tab:alt", function (win) {
-//    win.doOperation(throwNext);
-    win.doOperation(centerWindow);
+    win.doOperation(throwNext);
 });
 
 S.bnda({

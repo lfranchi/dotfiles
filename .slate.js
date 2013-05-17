@@ -1,4 +1,5 @@
 // order screens left to right so they are easier to reference
+
 slate.config("orderScreensLeftToRight", true);
 
 var externalScreen = function() {

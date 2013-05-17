@@ -175,6 +175,7 @@ slate.bind("4:alt", function (win) {
 });
 slate.bind("tab:alt", function (win) {
     win.doOperation(throwNext);
+    win.doOperation(centerWindow);
 });
 
 S.bnda({

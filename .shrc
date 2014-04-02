@@ -1,0 +1,174 @@
+# 077 would be more secure, but 022 is generally quite realistic
+umask 022
+
+# Colorful manpages
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+# Set to avoid `env` output from changing console colour
+export LESS_TERMEND=$'\E[0m'
+
+# Virtualenvwrapper
+. /usr/local/bin/virtualenvwrapper.sh
+
+# Qt development
+export QTEST_COLORED=1
+
+# Go development
+export GOPATH=/Users/leo/src/gocode
+
+# Better locate
+function locate { mdfind "kMDItemDisplayName == '$@'wc"; }
+
+export SHELL=/bin/zsh
+
+alias fixpref='killall -u leo cfprefsd'
+
+# Fix VLC finding plugins
+export VLC_PLUGIN_PATH=/usr/local/lib/vlc
+
+# humbug cmake
+alias hcm="cmake -DPHONON_INCLUDE_DIR=/usr/local/Cellar/kde-phonon/4.6.0/include/ -DPHONON_LIBRARY=/usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.4.6.0.dylib -DCMAKE_CXX_FLAGS=\"-g \"  -DCMAKE_BUILD_TYPE=Debug .."
+
+# TOmahawk dev
+alias tcmh="cmake -DPHONON_INCLUDE_DIR=/usr/local/Cellar/kde-phonon/4.7.1/include/ -DPHONON_LIBRARY=/usr/local/Cellar/kde-phonon/4.7.1/lib/libphonon.4.7.1.dylib -DPhonon_DIR=/usr/local/Cellar/kde-phonon/4.7.1/lib/cmake/phonon  -DCMAKE_CXX_FLAGS=\"-g \"  -DCMAKE_BUILD_TYPE=Debug  -DWITH_BREAKPAD=false -DBUILD_HATCHET=ON  .."
+#alias tcmh="cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CXX_FLAGS=\"-g \" -DPHONON_BUILDSYSTEM_DIR=/usr/local/Cellar/kde-phonon/4.6.0/share/phonon-buildsystem/ -DPHONON_INCLUDE_DIR=/usr/local/Cellar/kde-phonon/4.6.0/include -DPHONON_LIBRARY=/usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib -DWITH_BREAKPAD=false  .."
+#alias tcmh="cmake  -DCMAKE_C_COMPILER=/usr/bin/gcc-4.2 -DCMAKE_CXX_COMPILER=/usr/bin/g++-4.2 -DCMAKE_CXX_FLAGS=\"-g \" -DPHONON_BUILDSYSTEM_DIR=/usr/local/Cellar/kde-phonon/4.6.0/share/phonon-buildsystem/ -DPHONON_INCLUDE_DIR=/usr/local/Cellar/kde-phonon/4.6.0/include -DPHONON_LIBRARY=/usr/local/Cellar/kde-phonon/4.6.0/lib/libphonon.dylib -DINTERNAL_QTWEETLIB=ON  .."
+
+
+# KDAB development
+#export KDABSVN='svn+ssh://leo@svn.kdab.com/home/SVN-klaralv'
+#if [[ $USER == "kdab" ]]
+#then
+#	export EMAIL="leo.franchi@kdab.com"
+#else
+#	export EMAIL="lfranchi@kde.org"
+#fi
+#export GIT_AUTHOR_EMAIL="$EMAIL"
+#export GIT_COMMITTER_EMAIL="$EMAIL"
+
+# Setup paths
+function addtopath {
+	if [[ -d $1 ]]
+	then
+		export PATH="$1:$PATH"
+	fi
+}
+
+export PYTHONPATH="/Users/leo/src/django":$PYTHONPATH
+
+addtopath /usr/local/opt/gnu-sed/libexec/gnubin
+addtopath /usr/local/opt/ruby/bin
+addtopath /usr/local/share/npm/bin
+addtopath /usr/local/bin
+addtopath /usr/local/sbin
+addtopath /usr/local/share/python
+addtopath $HOME/.rbenv/shims
+addtopath $HOME/src/qtrepotools/bin
+addtopath $HOME/bin
+addtopath /usr/local/Cellar/go/1.2/libexec/bin
+addtopath $HOME/src/gocode/bin
+
+# Count CPUs on OS X and Linux
+if [[ $(uname -s) == "Darwin" ]]
+then
+	export CPUCOUNT=$(sysctl -n hw.ncpu)
+elif [[ $(uname -s) = "Linux" ]]
+then
+	export CPUCOUNT=$(getconf _NPROCESSORS_ONLN)
+fi
+
+if [[ "$CPUCOUNT" -gt 1 ]]
+then
+	export MAKEFLAGS="-j$CPUCOUNT"
+fi
+
+# Aliases
+alias su="/bin/su -"
+alias scp="scp -r"
+alias mkdir="mkdir -vp"
+alias df="df -H"
+alias rm="rm -v"
+alias mv="mv -v"
+alias cp="cp"
+alias du="du -sh"
+alias less="less -r"
+alias wget="wget -c"
+alias watch="watch -n1"
+alias grep="grep --color=auto"
+alias ls="ls -F --color=auto"
+alias ll="ls -lah"
+alias make="nice make"
+alias brew="nice brew"
+alias bpi="brew pull --install"
+
+function aliasifexists {
+	if which $2 1>/dev/null
+	then
+		alias $1=$2
+	fi
+}
+
+aliasifexists ack ack-grep
+aliasifexists diff colordiff
+aliasifexists open gnome-open
+
+# Upload files to various temporary locations
+function scptohttp {
+	USER="$1"
+	UPLOADHOST="$2"
+	WWWDIR="$3"
+	FILEPATH="$4"
+	FILENAME=$(basename "$FILEPATH")
+	HTTPFILE=${FILENAME//" "/"%20"}
+
+	SCP="$USER@$UPLOADHOST:$WWWDIR/"
+	HTTP="http://$UPLOADHOST/~$USER/$HTTPFILE"
+	scp "$FILEPATH" "$SCP"
+	if (( $? ))
+	then
+		echo "$FILEPATH failed to upload to $SCP"
+	else
+		echo "$FILEPATH uploaded to $HTTP"
+
+		if [ $(uname -s) = "Darwin" ]
+		then
+			echo $HTTP | pbcopy
+			echo "URL copied to clipboard."
+		fi
+	fi
+}
+
+alias upkdab="scptohttp leo swanson.kdab.com public_html"
+alias upjoanna="scptohttp leo joanna.kdab.com public_html"
+
+# Platform-specific stuff
+export EDITOR="vim"
+
+if [[ $(uname -s) == "Darwin" ]]
+then
+	if [[ -n "${DISPLAY}" ]]
+	then
+		export EDITOR="vim"
+		export GIT_EDITOR="vim"
+		export SVN_EDITOR=$GIT_EDITOR
+	fi
+	alias ls="ls -F -G"
+# Matches Cygwin or MINGW
+elif [[ $(uname -s) == *_NT-* ]]
+then
+	unalias grep
+fi
+
+# Run dircolors if it exists
+if which dircolors 1>/dev/null
+then
+	eval $(dircolors -b)
+fi
+
+# Aliases using variables
+alias ed="$EDITOR"

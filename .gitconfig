@@ -1,0 +1,75 @@
+[alias]
+    st = status
+    d = diff
+    ci = commit -v
+    cia = commit -v -a
+    co = checkout
+    l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    ll = log -p
+    lt = log trunk..
+    llt = log -p trunk..
+    lm = log master..
+    llm = log -p master..
+    b = branch
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+[user]
+	email = lfranchi@kde.org
+	name = Leo Franchi
+[github]
+    # Set my GitHub username for command-line tools.
+    user = lfranchi
+[gist]
+    # Open GitHub Gist in browser after submission.
+    browse = true
+[url "git://anongit.kde.org/"]
+    insteadOf = kde:
+[url "git@git.kde.org:"]
+     pushInsteadOf = kde:
+[rebase]
+	stat = true
+[color]
+	ui = auto
+[core]
+	pager = less -FRSX
+    excludesfile = ~/.gitignore
+[push]
+	default = tracking
+[rerere]
+	enabled = false
+[help]
+    # Open Git help pages in the browser as HTML.
+    format = web
+[diff]
+    # Use the OS X graphical three-way merge tool for graphical diffs.
+    tool = opendiff
+[difftool "opendiff"]
+    # Set the OS X opendiff command name.
+    path = opendiff
+[merge]
+    # Use the OS X graphical three-way merge tool for graphical merges.
+    tool = opendiff
+[mergetool]
+    # Don't prompt before opening the merge tool.
+    prompt = false
+    # Don't keep backups of the merge tool inputs.
+	keepBackup = false
+    # Don't keep the merge tool temporary input/output files.
+    keepTemporaries = false
+[mergetool "opendiff"]
+    # Use a script to setup opendiff correctly for Git merges.
+    path = git-mergetool-opendiff.sh
+[apply]
+    # Cleanup whitespace by default when apply patches.
+    whitespace = fix
+[url "git@github.com:"]
+    # Always use GitHub SSH protocol to push.
+    # Allows use of git:// for public repositories with push access
+    # (which is often faster).
+    pushInsteadOf = git://github.com/
+[url "https://github.com/"]
+    # Use HTTP for GitHub instead of git://
+    # Enable this in networks where git:// is blocked.
+    #insteadOf = git://github.com/
+[credential]
+    # Use OSX Keychain to store HTTP passwords.
+    helper = osxkeychain
